@@ -215,6 +215,28 @@ SHOW hba_file;
 SHOW data_directory;
 
 ### บันทึกผลการทดลอง
+postgres=# SELECT version();
+-----------------------------------------------------
+ PostgreSQL 17.6 (Debian 17.6-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
++ SHOW config_file;
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (SHOW:String) [  
+   ], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\ACER> SHOW hba_file;
+SHOW : The term 'SHOW' is not recognized as the name of a 
+cmdlet, function, script file, or operable program. Check the  
+spelling of the name, or if a path was included, verify that   
+the path is correct and try again.
+At line:1 char:1
++ SHOW hba_file;
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (SHOW:String) [  
+   ], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
 ```
 1. ตำแหน่งที่อยู่ของไฟล์ configuration อยู่ที่ตำแหน่งใด
 2. ตำแหน่งที่อยู่ของไฟล์ data อยู่ที่ตำแหน่งใด
@@ -229,7 +251,11 @@ WHERE name IN (
 ```
 ### บันทึกผลการทดลอง
 ```
-บันทึกรูปผลของ configuration ทั้ง 6 ค่า 
+บันทึกรูปผลของ configuration ทั้ง 6 ค่า
+1.docker exec postgres-config free -h
+<img width="581" height="153" alt="image" src="https://github.com/user-attachments/assets/20ef3dcc-82c2-47e8-8bae-b4e0e9543cef" />
+
+
 ```
 
 ### Step 2: การปรับแต่งพารามิเตอร์แบบค่อยเป็นค่อยไป
