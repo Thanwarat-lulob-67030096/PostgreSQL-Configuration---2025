@@ -253,9 +253,22 @@ WHERE name IN (
 ```
 บันทึกรูปผลของ configuration ทั้ง 6 ค่า
 1.docker exec postgres-config free -h
-![image](https://github.com/user-attachments/assets/5dee02b5-6c3a-4097-befc-c9f7ce859f70)
+<img width="581" height="153" alt="Screenshot 2025-09-16 100232" src="https://github.com/user-attachments/assets/bebe193f-ce52-4b70-a7f9-253a364dd200" />
 
+2.docker exec postgres-config df -h
+<img width="501" height="222" alt="image" src="https://github.com/user-attachments/assets/f0f2a2b2-746b-4e83-8056-0b3de0f6fcfc" />
 
+3.docker exec postgres-config nproc
+<img width="512" height="48" alt="image" src="https://github.com/user-attachments/assets/50ab2196-e559-4c2b-91e4-05b51dfd3b83" />
+
+4.docker exec postgres-config ps -ef
+<img width="649" height="502" alt="image" src="https://github.com/user-attachments/assets/66a9a3c0-6fcd-4729-bc7b-d1926e43ed2b" />
+
+5.docker exec postgres-config postgres -V
+<img width="500" height="86" alt="image" src="https://github.com/user-attachments/assets/768c185d-9511-4a3b-ba3f-8bb026126833" />
+
+6.docker exec -it postgres-config psql -U postgres
+<img width="584" height="150" alt="image" src="https://github.com/user-attachments/assets/7fd29eec-8202-4bbd-93bb-e7f0218a23b7" />
 
 
 ```
@@ -270,6 +283,12 @@ FROM pg_settings
 WHERE name = 'shared_buffers';
 
 ### ผลการทดลอง
+postgres=# SELECT version();
+      name      | setting | unit |       source       | pending_restart
+----------------+---------+------+--------------------+-----------------
+ shared_buffers | 16384   | 8kB  | configuration file | t      
+(1 row)
+
 ```
 1.รูปผลการรันคำสั่ง
 2. ค่า  shared_buffers มีการกำหนดค่าไว้เท่าไหร่ (ใช้ setting X unit)
@@ -292,7 +311,9 @@ docker exec -it -u postgres postgres-config pg_ctl restart -D /var/lib/postgresq
 ### ผลการทดลอง
 ```
 รูปผลการเปลี่ยนแปลงค่า pending_restart
+
 รูปหลังจาก restart postgres
+<img width="615" height="236" alt="image" src="https://github.com/user-attachments/assets/b9f96a4f-f7ab-495f-a872-e5cd9bbf5fd3" />
 
 ```
 
@@ -317,6 +338,8 @@ WHERE name = 'work_mem';
 ### ผลการทดลอง
 ```
 รูปผลการเปลี่ยนแปลงค่า work_mem
+<img width="553" height="364" alt="image" src="https://github.com/user-attachments/assets/665feaaa-a1fe-46c2-aaac-a2aa67e8bf13" />
+
 ```
 
 #### 3.3 ปรับแต่ง Maintenance Work Memory
@@ -334,6 +357,8 @@ SHOW maintenance_work_mem;
 ### ผลการทดลอง
 ```
 รูปผลการเปลี่ยนแปลงค่า maintenance_work_mem
+<img width="456" height="143" alt="image" src="https://github.com/user-attachments/assets/8981672b-42d4-47ea-b600-dd399e9470af" />
+
 ```
 
 #### 3.4 ปรับแต่ง WAL Buffers
@@ -359,6 +384,8 @@ SHOW wal_buffers;
 ### ผลการทดลอง
 ```
 รูปผลการเปลี่ยนแปลงค่า wal_buffers
+<img width="346" height="137" alt="image" src="https://github.com/user-attachments/assets/6ee8062d-0783-4e21-b892-c1af89a56a90" />
+
 ```
 
 #### 3.5 ปรับแต่ง Effective Cache Size
@@ -376,6 +403,8 @@ SHOW effective_cache_size;
 ### ผลการทดลอง
 ```
 รูปผลการเปลี่ยนแปลงค่า effective_cache_size
+<img width="505" height="134" alt="image" src="https://github.com/user-attachments/assets/5f187c22-b140-468f-a4d0-56e7f78b5b8d" />
+
 ```
 
 ### Step 4: ตรวจสอบผล
@@ -405,6 +434,8 @@ ORDER BY name;
 ### ผลการทดลอง
 ```
 รูปผลการลัพธ์การตั้งค่า
+<img width="590" height="454" alt="image" src="https://github.com/user-attachments/assets/ace34b5e-a2e2-4fe5-9085-65dcb3c30cf3" />
+
 ```
 
 ### Step 5: การสร้างและทดสอบ Workload
