@@ -253,7 +253,9 @@ WHERE name IN (
 ```
 บันทึกรูปผลของ configuration ทั้ง 6 ค่า
 1.docker exec postgres-config free -h
-<img width="581" height="153" alt="image" src="https://github.com/user-attachments/assets/20ef3dcc-82c2-47e8-8bae-b4e0e9543cef" />
+![image](https://github.com/user-attachments/assets/5dee02b5-6c3a-4097-befc-c9f7ce859f70)
+
+
 
 
 ```
