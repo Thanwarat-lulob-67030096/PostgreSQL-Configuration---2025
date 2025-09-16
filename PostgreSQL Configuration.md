@@ -479,9 +479,28 @@ LIMIT 1000;
 ```
 ### ผลการทดลอง
 ```
-1. คำสั่ง EXPLAIN(ANALYZE,BUFFERS) คืออะไร 
+1. คำสั่ง EXPLAIN(ANALYZE,BUFFERS) คืออะไร
+  -EXPLAIN ใช้เพื่อ แสดงแผนการประมวลผลของ PostgreSQL ว่าจะทำงานกับ Query อย่างไร เช่น จะ Scan ตารางแบบ Sequential Scan หรือใช้ Index Scan
+
+Option ANALYZE ทำให้ PostgreSQL รัน Query จริงและแสดงเวลาที่ใช้จริง พร้อมจำนวนแถวที่อ่าน/ประมวลผล
+
+Option BUFFERS จะแสดง ข้อมูลเกี่ยวกับการใช้ buffer เช่น จำนวน block ที่อ่านจาก memory หรือ disk ทำให้เรารู้ว่า query ใช้ I/O มากน้อยเพียงใด
+
+สรุป: คำสั่งนี้ช่วย วิเคราะห์ประสิทธิภาพ ของ Query ได้ทั้งด้านเวลาและ I/O
+---------------------------
 2. รูปผลการรัน
+<img width="651" height="453" alt="image" src="https://github.com/user-attachments/assets/fc377ad7-cdea-4012-b888-d29ca84d0445" />
+
+---------------------------
 3. อธิบายผลลัพธ์ที่ได้
+Limit → Query จะ หยุดหลังได้ 1000 แถว
+Sort → PostgreSQL ต้อง เรียงข้อมูล ก่อนเลือก 1000 แถวตาม data
+actual time → เวลาในการประมวลผลจริง (เริ่ม-จบ)
+rows → จำนวนแถวที่ Query ดึงออกมา
+Buffers → การใช้งาน memory/disk buffer
+shared hit = อ่านจาก memory
+read = อ่านจาก disk
+
 ```
 ```sql
 -- ทดสอบ Hash operation
@@ -496,8 +515,25 @@ LIMIT 100;
 ### ผลการทดลอง
 ```
 1. รูปผลการรัน
-2. อธิบายผลลัพธ์ที่ได้ 
+<img width="647" height="460" alt="image" src="https://github.com/user-attachments/assets/d30ec0f0-8fef-4df8-bc35-015a28d812b5" />
+---------------
+2. อธิบายผลลัพธ์ที่ได้
+  -ส่วน	ความหมาย
+HashAggregate	ใช้ hash table ใน memory เพื่อคำนวณ COUNT(*) ตามแต่ละ number
+Seq Scan	ตารางถูกสแกนแบบ Sequential Scan (อ่านทุกแถว) เพราะไม่มี index ที่ช่วย GROUP BY number อย่างตรง ๆ
+Buffers	แสดงจำนวน block ของ memory/disk ที่ถูกอ่านหรือใช้
+Planning Time	เวลาในการสร้าง execution plan
+Execution Time	เวลาในการประมวลผล query จริง
+---------------
 3. การสแกนเป็นแบบใด เกิดจากเหตุผลใด
+  -Sequential Scan (Seq Scan)
+
+เกิดเพราะ query ต้องอ่านทุกแถวของ large_table เพื่อสร้าง Hash Table สำหรับ GROUP BY number
+
+แม้จะมี index บน number แต่ PostgreSQL จะเลือก Seq Scan หากคิดว่าอ่านทั้งหมดเร็วกว่าใช้ index (โดยเฉพาะกับตารางใหญ่)
+
+HashAggregate ใช้ memory (work_mem) สำหรับสร้าง hash table ซึ่งถ้า work_mem เล็กเกินไป ระบบอาจ spill ไป disk → ช้าลง
+
 ```
 #### 5.3 การทดสอบ Maintenance Work Memory
 ```sql
